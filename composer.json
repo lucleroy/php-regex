@@ -1,0 +1,26 @@
+{
+    "name": "lucleroy/php-regex",
+    "description": "PHP Regular Expressions Builder",
+    "type": "library",
+    "keywords": [
+        "regular expression",
+        "regex"
+    ],
+    "license": "LGPL-3.0",
+    "authors": [
+        {
+            "name": "Luc Leroy",
+            "email": "lucleroy2001@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/lucleroy/php-regex",
+    "version": "0.1.0",
+    "autoload": {
+        "psr-4": {
+            "LucLeroy\\Regex\\": "src"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
