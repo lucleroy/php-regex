@@ -49,9 +49,14 @@ PHP 5.4 or more.
 All the supported PHP PCRE features are listed in this document. Some features
 are missing. In particular, the recursion is not supported.
 
-##<a name="install"></a> Installation
+##<a name="install"></a> Installation (with Composer)
 
-TODO
+Add the following to the `require` section of your composer.json file
+
+```
+"lucleroy/php-regex": "dev-master"
+```
+and run `composer update`.
 
 ##<a name="usage"></a> Usage
 
@@ -60,6 +65,10 @@ TODO
 Create a Regex object with `Regex::create`:
 
 ```php
+use LucLeroy\Regex;
+
+require 'vendor/autoload.php';
+
 $regex = Regex::create();
 ```
 
