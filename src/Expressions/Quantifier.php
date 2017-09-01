@@ -71,7 +71,7 @@ class Quantifier extends RegularExpression implements Atomic
         return $this->policy;
     }
 
-    protected function setQuantifierPolicy($policy, $recursive)
+    protected function setQuantifierPolicy($policy, $recursive = false)
     {
         if ($this->policy === self::UNDEFINED) {
             $this->policy = $policy;

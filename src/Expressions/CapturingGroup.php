@@ -22,7 +22,7 @@ class CapturingGroup extends RegularExpression implements Atomic
         return '(' . $this->expression . ')';
     }
 
-    protected function setQuantifierPolicy($policy, $recursive)
+    protected function setQuantifierPolicy($policy, $recursive = false)
     {
         $this->expression->setQuantifierPolicy($policy, $recursive);
     }
