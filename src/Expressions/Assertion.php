@@ -19,7 +19,7 @@ class Assertion extends RegularExpression implements Atomic
         return '(' . $this->code . $this->expression . ')';
     }
 
-    protected function setQuantifierPolicy($policy, $recursive)
+    protected function setQuantifierPolicy($policy, $recursive = false)
     {
         $this->expression->setQuantifierPolicy($policy, $recursive);
     }

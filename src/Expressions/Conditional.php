@@ -50,7 +50,7 @@ class Conditional extends RegularExpression implements Atomic
         return '(?' . $cond . $true . '|' . $false . ')';
     }
     
-        protected function setQuantifierPolicy($policy, $recursive)
+        protected function setQuantifierPolicy($policy, $recursive = false)
     {
         $this->cond->setQuantifierPolicy($policy, $recursive);
         $this->true->setQuantifierPolicy($policy, $recursive);

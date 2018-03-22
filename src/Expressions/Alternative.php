@@ -26,7 +26,7 @@ class Alternative extends RegularExpression
         return $result;
     }
     
-    protected function setQuantifierPolicy($policy, $recursive)
+    protected function setQuantifierPolicy($policy, $recursive = false)
     {
         foreach ($this->expressions as $expression) {
             $expression->setQuantifierPolicy($policy, $recursive);
