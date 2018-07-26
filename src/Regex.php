@@ -630,10 +630,21 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function backSpace()
+    public function backspace()
     {
         $this->expressions[] = Charset::create()->backspace();
         return $this;
+    }
+    
+    /**
+     * Use Regex::backspace instead
+     * 
+     * @deprecated since version 0.1.1
+     * @return Regex
+     */
+    public function backSpace()
+    {
+        return $this->backspace();
     }
 
     /**
