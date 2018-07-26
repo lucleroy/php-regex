@@ -25,7 +25,7 @@ PHP library with fluent interface to build regular expressions.
     * [Case sensitivity](#case)
     * [Special Expressions](#special)
 
-##<a name="introduction"></a> Introduction
+## <a name="introduction"></a> Introduction
 
 Here is a simple example that creates a regular expression to recognize a PHP hexadecimal number (example: 0x1ff).
 
@@ -40,16 +40,16 @@ This code is equivalent to:
 ```php
 $regex = '/0[xX][0-9a-fA-F]+/m';
 ```
-##<a name="require"></a> Requirements
+## <a name="require"></a> Requirements
 
 PHP 5.4 or more.
 
-##<a name="limitations"></a> Limitations
+## <a name="limitations"></a> Limitations
 
 All the supported PHP PCRE features are listed in this document. Some features
 are missing. In particular, the recursion is not supported.
 
-##<a name="install"></a> Installation (with Composer)
+## <a name="install"></a> Installation (with Composer)
 
 Add the following to the `require` section of your composer.json file
 
@@ -58,9 +58,9 @@ Add the following to the `require` section of your composer.json file
 ```
 and run `composer update`.
 
-##<a name="usage"></a> Usage
+## <a name="usage"></a> Usage
 
-###<a name="workflow"></a> Workflow
+### <a name="workflow"></a> Workflow
 
 Create a Regex object with `Regex::create`:
 
@@ -103,16 +103,16 @@ $regex = Regex::create()
     ->digit()->atLeastOne()->literal('%/')->digit()->atLeastOne()->literal('%');
 
 echo $regex->getRegex();   // /\d+%\/\d+%/m
-echo $regex->getRegex('%); // %\d+\%/\d+\%%m
+echo $regex->getRegex('%'); // %\d+\%/\d+\%%m
 ``` 
 
 Note: when you convert a Regex instance to a string, you get the raw regular expression string. With the preceding example :
 
 ```php
-echo "$regex";   \d+%/\d+%
+echo "$regex"; // \d+%/\d+%
 ```
 
-###<a name="literal"></a> Literal Characters
+### <a name="literal"></a> Literal Characters
 
 Use `Regex::literal` to match literal characters. Special characters are automatically escaped:
 
@@ -133,7 +133,7 @@ echo Regex::create()
     ->literal('a')->literal('b')->anyTimes(); // ab*
 ``` 
 
-###<a name="charset"></a> Character Sets
+### <a name="charset"></a> Character Sets
 
 Use `Regex::chars` to match chars in a character set. Use two dots to specify a 
 range of characters.
@@ -251,7 +251,7 @@ echo Regex::create()
     ->digit(8);       // [0-7]
 ```
 
-###<a name="anychar"></a> Match any character
+### <a name="anychar"></a> Match any character
 
 If you want to match any character, use `Regex::anyChar`:
 
@@ -268,7 +268,7 @@ echo Regex::create()
     ->notNewline();   // .
 ```
 
-###<a name="anchors"></a> Anchors
+### <a name="anchors"></a> Anchors
 
 To match at the start of the string or at the end of the string, use `Regex:startOfString`
 and `Regex::endOfString`.
@@ -298,7 +298,7 @@ echo Regex::create()
     ->notWordLimit(); // \B
 ```
 
-###<a name="alt"></a> Alternation
+### <a name="alt"></a> Alternation
 
 Use `Regex::alt` to create an alternation. There are several ways to provide each 
 choice.
@@ -346,7 +346,7 @@ echo Regex::create()
     ->literalAlt(['one', 'two', 'three']);  // one|two|three
 ```
 
-###<a name="quantifiers"></a> Quantifiers
+### <a name="quantifiers"></a> Quantifiers
 
 Use `Regex::optional` to match an optional expression:
 
@@ -410,7 +410,7 @@ echo Regex::create()
 Note: instead of add the quantifier to the previous expression, you can provide 
 a Regex instance as last argument of each of these methods.
 
-###<a name="greedy"></a> Greedy, Lazy, Possessive Quantifiers
+### <a name="greedy"></a> Greedy, Lazy, Possessive Quantifiers
 
 In the previous examples, the quantifiers are greedy. This is the default 
 behavior. More precisely, a quantifier can have 4 modes: GREEDY, LAZY, POSSESSIVE,
@@ -475,7 +475,7 @@ echo Regex::create()
     ->lazyRecursive();  // (?:ab?)*?|c*?
 ```
 
-###<a name="capture"></a> Grouping and Capturing
+### <a name="capture"></a> Grouping and Capturing
 
 By default, when the library needs to create a group, it is not captured. To
 capture an expression, you must use `Regex::capture`:
@@ -520,7 +520,7 @@ echo Regex::create()
     ->group($group)->capture();  // a(bc)
 ```
 
-###<a name="backreferences"></a> Backreferences
+### <a name="backreferences"></a> Backreferences
 
 Use `Regex::ref` to make a backreference:
 
@@ -536,7 +536,7 @@ echo Regex::create()
     ->ref('myname');  // (?P<myname>a*)\-(?P=myname)
 ```
 
-###<a name="atomic"></a> Atomic grouping
+### <a name="atomic"></a> Atomic grouping
 
 Use `Regex::atomic` to make an atomic group:
 
@@ -546,7 +546,7 @@ echo Regex::create()
     ->atomic();  // (?>a*)
 ```
 
-###<a name="lookaround"></a> Lookahead, Lookbehind
+### <a name="lookaround"></a> Lookahead, Lookbehind
 
 Use `Regex::after`, `Regex::notAfter`, `Regex::before`, `Regex::notBefore`:
 
@@ -572,7 +572,7 @@ echo Regex::create()
     ->literal('b');   // (?<!a)b
 ```
 
-###<a name="cond"></a> Conditionals
+### <a name="cond"></a> Conditionals
 
 Create a conditional with `Regex::cond`. This method must be preceded by a 
 condition, an expression to match when the condition is true, and an optional
@@ -646,7 +646,7 @@ echo Regex::create()
     ->cond();      // (?(?<=a)|c)
 ```
 
-###<a name="case"></a> Case sensitivity
+### <a name="case"></a> Case sensitivity
 
 By default, the regular expression is case sensitive. Use `Regex::caseSensitive`
 or `Regex::caseInsensitive` to change this behavior. Each of these methods accepts
@@ -672,7 +672,7 @@ echo Regex::create()
     ->literal('c');   // (?i)abc(?-i)
 ```
 
-###<a name="special"></a> Special Expressions
+### <a name="special"></a> Special Expressions
 
 `Regex::crlf` matches a Carriage Return followed by a Line Feed (Windows line breaks):
 
