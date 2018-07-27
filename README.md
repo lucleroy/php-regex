@@ -42,7 +42,7 @@ $regex = '/0[xX][0-9a-fA-F]+/m';
 ```
 ## <a name="require"></a> Requirements
 
-PHP 5.4 or more.
+PHP 5.5 or more.
 
 ## <a name="limitations"></a> Limitations
 
