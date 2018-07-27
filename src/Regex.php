@@ -637,17 +637,6 @@ class Regex extends RegularExpression
     }
     
     /**
-     * Use Regex::backspace instead
-     * 
-     * @deprecated since version 0.1.1
-     * @return Regex
-     */
-    public function backSpace()
-    {
-        return $this->backspace();
-    }
-
-    /**
      * Match a CR followed by a LF (Windows line break).
      * 
      * @return Regex
