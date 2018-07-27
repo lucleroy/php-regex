@@ -2,7 +2,7 @@
 
 namespace LucLeroy\Regex;
 
-class RegexTest extends \PHPUnit_Framework_TestCase
+class RegexTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testLiteral()
@@ -19,7 +19,7 @@ class RegexTest extends \PHPUnit_Framework_TestCase
     public function test_non_printable_chars()
     {
         $this->assertEquals('\a\e\f\n\r\t\v[\b]',
-            Regex::create()->bell()->esc()->ff()->lf()->cr()->tab()->vtab()->backSpace());
+            Regex::create()->bell()->esc()->ff()->lf()->cr()->tab()->vtab()->backspace());
         $this->assertEquals('\r\n', Regex::create()->crlf());
     }
 

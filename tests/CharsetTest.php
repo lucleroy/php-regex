@@ -2,9 +2,7 @@
 
 namespace LucLeroy\Regex;
 
-use PHPUnit_Framework_TestCase;
-
-class CharsetTest extends PHPUnit_Framework_TestCase
+class CharsetTest extends \PHPUnit\Framework\TestCase
 {
 
     public function test_non_printable_chars()
