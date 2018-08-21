@@ -341,4 +341,19 @@ class RegexTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('/a/muS', Regex::create()->literal('a')->getUtf8OptimizedRegex());
     }
     
+    public function testunsignedIntRange() 
+    {
+        $this->assertEquals('\d', Regex::create()->unsignedIntRange(0, 9, false)->toString());
+        $this->assertEquals('[2-7]', Regex::create()->unsignedIntRange(2, 7, false)->toString());
+        $this->assertEquals('23', Regex::create()->unsignedIntRange(23, 23, false)->toString());
+        $this->assertEquals('2[34]', Regex::create()->unsignedIntRange(23, 24, false)->toString());
+        $this->assertEquals('2[3-7]', Regex::create()->unsignedIntRange(23, 27, false)->toString());
+        $this->assertEquals('2[01]|19', Regex::create()->unsignedIntRange(19, 21, false)->toString());
+        $this->assertEquals('2[0-7]|1[2-9]', Regex::create()->unsignedIntRange(12, 27, false)->toString());
+        $this->assertEquals('54[0-7]|5[0-3]\d|[1-4]\d\d|[2-9]\d|1[2-9]', Regex::create()->unsignedIntRange(12, 547, false)->toString());
+        $this->assertEquals('25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d', Regex::create()->unsignedIntRange(0, 255, false)->toString());
+        $this->assertEquals('25[0-5]|2[0-4]\d|1\d\d|0[1-9]\d|0{2}\d', Regex::create()->unsignedIntRange(0, 255, true)->toString());
+        $this->assertEquals('25[0-5]|2[0-4]\d|1\d\d|0?[1-9]\d|0{0,2}\d', Regex::create()->unsignedIntRange(0, 255)->toString());
+        $this->assertEquals('2[0-4]|1\d|[1-9]', Regex::create()->unsignedIntRange(1, 24, false)->toString());
+    }
 }

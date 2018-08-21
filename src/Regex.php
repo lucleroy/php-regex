@@ -21,16 +21,15 @@ use LucLeroy\Regex\Expressions\RegularExpression;
 use LucLeroy\Regex\Expressions\SpecialCharSet;
 use LucLeroy\Regex\Expressions\UnicodeCharacter;
 use LucLeroy\Regex\Expressions\UnicodeProperty;
+use LucLeroy\Regex\Expressions\UnsignedIntRange;
 
-class Regex extends RegularExpression
-{
+class Regex extends RegularExpression {
 
     private $options;
     private $expressions = [];
     private $defaultQuantifierPolicy = Quantifier::UNDEFINED;
 
-    function __construct($expressions = [])
-    {
+    function __construct($expressions = []) {
         $this->options = 'm';
         $this->expressions = $expressions;
     }
@@ -39,8 +38,7 @@ class Regex extends RegularExpression
      *
      * @return Regex
      */
-    public static function create($expressions = [])
-    {
+    public static function create($expressions = []) {
         return new self($expressions);
     }
 
@@ -49,8 +47,7 @@ class Regex extends RegularExpression
      * 
      * @return array
      */
-    public function getExpressions()
-    {
+    public function getExpressions() {
         return $this->expressions;
     }
 
@@ -59,8 +56,7 @@ class Regex extends RegularExpression
      * 
      * @return string
      */
-    public function toString()
-    {
+    public function toString() {
         if (count($this->expressions) === 1) {
             return $this->expressions[0] . '';
         }
@@ -84,23 +80,19 @@ class Regex extends RegularExpression
      *            The delimiter, '/' by default.
      * @return string The resulting regex.
      */
-    public function getRegex($delimiter = '/')
-    {
+    public function getRegex($delimiter = '/') {
         return $delimiter . str_replace($delimiter, '\\' . $delimiter, $this) . $delimiter . $this->options;
     }
 
-    public function getOptimizedRegex($delimiter = '/')
-    {
+    public function getOptimizedRegex($delimiter = '/') {
         return $this->getRegex($delimiter) . 'S';
     }
 
-    public function getUtf8Regex($delimiter = '/')
-    {
+    public function getUtf8Regex($delimiter = '/') {
         return $this->getRegex($delimiter) . 'u';
     }
 
-    public function getUtf8OptimizedRegex($delimiter = '/')
-    {
+    public function getUtf8OptimizedRegex($delimiter = '/') {
         return $this->getRegex($delimiter) . 'uS';
     }
 
@@ -110,8 +102,7 @@ class Regex extends RegularExpression
      * @param string $string The string to match
      * @return Regex
      */
-    public function literal($string)
-    {
+    public function literal($string) {
         is_string($string) || RegexException::argString(1)->throw();
         $string != '' || RegexException::argEmpty(1)->throw();
 
@@ -129,8 +120,7 @@ class Regex extends RegularExpression
      * @param RegularExpression $expression The regular expression to make optional. If null, the preceding expression is made optional.
      * @return Regex
      */
-    public function optional(RegularExpression $expression = null)
-    {
+    public function optional(RegularExpression $expression = null) {
         if ($expression === null) {
             !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
             $expression = array_pop($this->expressions);
@@ -145,8 +135,7 @@ class Regex extends RegularExpression
      * @param RegularExpression $expression The regular expression to repeat. If null, the the preceding expression is repeated.
      * @return Regex
      */
-    public function anyTimes(RegularExpression $expression = null)
-    {
+    public function anyTimes(RegularExpression $expression = null) {
         if ($expression === null) {
             !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
             $expression = array_pop($this->expressions);
@@ -161,8 +150,7 @@ class Regex extends RegularExpression
      * @param RegularExpression $expression The regular expression to repeat. If null, the the preceding expression is repeated.
      * @return Regex
      */
-    public function atLeastOne(RegularExpression $expression = null)
-    {
+    public function atLeastOne(RegularExpression $expression = null) {
         if ($expression === null) {
             !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
             $expression = array_pop($this->expressions);
@@ -178,8 +166,7 @@ class Regex extends RegularExpression
      * @param RegularExpression $expression The regular expression to repeat. If null, the the preceding expression is repeated.
      * @return Regex
      */
-    public function atLeast($min, RegularExpression $expression = null)
-    {
+    public function atLeast($min, RegularExpression $expression = null) {
         is_int($min) || RegexException::argInteger(1)->throw();
         $min >= 0 || RegexException::argRange(1, 0, null)->throw();
 
@@ -199,8 +186,7 @@ class Regex extends RegularExpression
      * @param RegularExpression $expression The regular expression to repeat. If null, the the preceding expression is repeated.
      * @return Regex
      */
-    public function between($min, $max, RegularExpression $expression = null)
-    {
+    public function between($min, $max, RegularExpression $expression = null) {
         is_int($min) || RegexException::argInteger(1)->throw();
         $min >= 0 || RegexException::argRange(1, 0, null)->throw();
         is_int($max) || RegexException::argInteger(2)->throw();
@@ -221,8 +207,7 @@ class Regex extends RegularExpression
      * @param RegularExpression $expression The regular expression to repeat.
      * @return Regex
      */
-    public function times($times, RegularExpression $expression = null)
-    {
+    public function times($times, RegularExpression $expression = null) {
         is_int($times) || RegexException::argInteger(1)->throw();
         $times >= 0 || RegexException::argRange(1, 0, null)->throw();
 
@@ -240,8 +225,7 @@ class Regex extends RegularExpression
      * @param RegularExpression $expression The regular expression to make atomic. If null, the the preceding expression is made atomic.
      * @return Regex
      */
-    public function atomic(RegularExpression $expression = null)
-    {
+    public function atomic(RegularExpression $expression = null) {
         if ($expression === null) {
             !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
             $expression = array_pop($this->expressions);
@@ -256,8 +240,7 @@ class Regex extends RegularExpression
      * @param string $name If not null, a named capture is made, otherwise an ordinary capture is made.
      * @return Regex
      */
-    public function capture($name = null)
-    {
+    public function capture($name = null) {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $this->expressions[] = new CapturingGroup(array_pop($this->expressions), $name);
         return $this;
@@ -270,8 +253,7 @@ class Regex extends RegularExpression
      * If an integer, makes a normal backreference. 
      * @return Regex
      */
-    public function ref($name)
-    {
+    public function ref($name) {
         $this->expressions[] = new BackReference($name);
         return $this;
     }
@@ -284,8 +266,7 @@ class Regex extends RegularExpression
      * If it is null, a group is made from all the preceding expressions.
      * @return Regex
      */
-    public function group($expression = null)
-    {
+    public function group($expression = null) {
         if ($expression === null) {
             !empty($this->expressions) || RegexException::notEnoughExpressionsFromMark(1)->throw();
             $expression = new Regex($this->popExpressionsFromMark());
@@ -301,8 +282,7 @@ class Regex extends RegularExpression
         return $this;
     }
 
-    private function popExpressionsFromMark()
-    {
+    private function popExpressionsFromMark() {
         $expressions = [];
         $top = end($this->expressions);
         while ($top && $top->mark == 0) {
@@ -323,15 +303,14 @@ class Regex extends RegularExpression
      * If it is null, an alternation is made from all the preceding expressions.
      * @return Regex
      */
-    public function alt($choices = null)
-    {
+    public function alt($choices = null) {
         if ($choices === null) {
             $choices = $this->popExpressionsFromMark();
             isset($choices[1]) || RegexException::notEnoughExpressionsFromMark(2)->throw();
         }
         if (is_int($choices)) {
             $choices >= 2 && $choices <= count($this->expressions) || RegexException::argRange(1, 2,
-                    count($this->expressions))->throw();
+                            count($this->expressions))->throw();
             $choices = array_splice($this->expressions, - $choices);
         }
         count($choices) >= 2 || RegexException::argLengthRange(1, 2, null)->throw();
@@ -345,8 +324,7 @@ class Regex extends RegularExpression
      * @param array $literals
      * @return Regex
      */
-    public function literalAlt(array $literals)
-    {
+    public function literalAlt(array $literals) {
         isset($literals[1]) || RegexException::argLengthRange(1, 2, INF);
         $expressions = [];
         foreach ($literals as $literal) {
@@ -361,8 +339,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function nothing()
-    {
+    public function nothing() {
         $this->expressions[] = new Nothing();
         return $this;
     }
@@ -372,8 +349,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function anyChar()
-    {
+    public function anyChar() {
         $this->expressions[] = new SpecialCharSet('(?s:.)');
         return $this;
     }
@@ -383,8 +359,7 @@ class Regex extends RegularExpression
      *
      * @return Regex
      */
-    public function notNewline()
-    {
+    public function notNewline() {
         $this->expressions[] = new SpecialCharSet('.');
         return $this;
     }
@@ -394,8 +369,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function startOfLine()
-    {
+    public function startOfLine() {
         $this->expressions[] = new SpecialCharSet('^');
         return $this;
     }
@@ -405,8 +379,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function endOfLine()
-    {
+    public function endOfLine() {
         $this->expressions[] = new SpecialCharSet('$');
         return $this;
     }
@@ -419,8 +392,7 @@ class Regex extends RegularExpression
      * @param int $base Base, between 2 and 36.
      * @return Regex
      */
-    public function digit($base = null)
-    {
+    public function digit($base = null) {
         if (isset($base)) {
             $this->expressions[] = (new Charset())->digit($base);
         } else {
@@ -434,8 +406,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function notDigit($base = 10)
-    {
+    public function notDigit($base = 10) {
         if (!isset($base)) {
             $this->expressions[] = new SpecialCharSet('\\D');
             return $this;
@@ -456,8 +427,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function wordChar()
-    {
+    public function wordChar() {
         $this->expressions[] = new SpecialCharSet('\\w');
         return $this;
     }
@@ -467,8 +437,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function notWordChar()
-    {
+    public function notWordChar() {
         $this->expressions[] = new SpecialCharSet('\\W');
         return $this;
     }
@@ -478,8 +447,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function whitespace()
-    {
+    public function whitespace() {
         $this->expressions[] = new SpecialCharSet('\\s');
         return $this;
     }
@@ -489,8 +457,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function notWhitespace()
-    {
+    public function notWhitespace() {
         $this->expressions[] = new SpecialCharSet('\\S');
         return $this;
     }
@@ -500,8 +467,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function wordLimit()
-    {
+    public function wordLimit() {
         $this->expressions[] = new SpecialCharSet('\\b');
         return $this;
     }
@@ -511,8 +477,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function notWordLimit()
-    {
+    public function notWordLimit() {
         $this->expressions[] = new SpecialCharSet('\\B');
         return $this;
     }
@@ -522,8 +487,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function startOfString()
-    {
+    public function startOfString() {
         $this->expressions[] = new SpecialCharSet('\\A');
         return $this;
     }
@@ -533,8 +497,7 @@ class Regex extends RegularExpression
      *
      * @return Regex
      */
-    public function endOfString()
-    {
+    public function endOfString() {
         $this->expressions[] = new SpecialCharSet('\\z');
         return $this;
     }
@@ -542,8 +505,7 @@ class Regex extends RegularExpression
     /**
      * @return Regex
      */
-    public function endOfStringIgnoreFinalBreak()
-    {
+    public function endOfStringIgnoreFinalBreak() {
         $this->expressions[] = new SpecialCharSet('\\Z');
         return $this;
     }
@@ -553,8 +515,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function tab()
-    {
+    public function tab() {
         $this->expressions[] = new SpecialCharSet('\\t');
         return $this;
     }
@@ -564,8 +525,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function cr()
-    {
+    public function cr() {
         $this->expressions[] = new SpecialCharSet('\\r');
         return $this;
     }
@@ -575,8 +535,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function lf()
-    {
+    public function lf() {
         $this->expressions[] = new SpecialCharSet('\\n');
         return $this;
     }
@@ -586,8 +545,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function esc()
-    {
+    public function esc() {
         $this->expressions[] = new SpecialCharSet('\\e');
         return $this;
     }
@@ -597,8 +555,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function bell()
-    {
+    public function bell() {
         $this->expressions[] = new SpecialCharSet('\\a');
         return $this;
     }
@@ -608,8 +565,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function ff()
-    {
+    public function ff() {
         $this->expressions[] = new SpecialCharSet('\\f');
         return $this;
     }
@@ -619,8 +575,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function vtab()
-    {
+    public function vtab() {
         $this->expressions[] = new SpecialCharSet('\\v');
         return $this;
     }
@@ -630,19 +585,17 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function backspace()
-    {
+    public function backspace() {
         $this->expressions[] = Charset::create()->backspace();
         return $this;
     }
-    
+
     /**
      * Match a CR followed by a LF (Windows line break).
      * 
      * @return Regex
      */
-    public function crlf()
-    {
+    public function crlf() {
         $this->expressions[] = new Regex([
             new SpecialCharSet('\\r'),
             new SpecialCharSet('\\n')
@@ -656,8 +609,7 @@ class Regex extends RegularExpression
      * @param bool $enabled If true (the default), search is case insentitive.
      * @return Regex
      */
-    public function caseInsensitive($enabled = true)
-    {
+    public function caseInsensitive($enabled = true) {
         return $this->addOption('i', $enabled);
     }
 
@@ -667,13 +619,11 @@ class Regex extends RegularExpression
      * @param bool $enabled If true (the default), search is case insentitive.
      * @return Regex
      */
-    public function caseSensitive($enabled = true)
-    {
+    public function caseSensitive($enabled = true) {
         return $this->addOption('i', !$enabled);
     }
 
-    protected function addOption($code, $enabled)
-    {
+    protected function addOption($code, $enabled) {
         if (empty($this->expressions)) {
             $exp = $this;
         } else {
@@ -692,8 +642,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function after()
-    {
+    public function after() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?=');
         $this->checkRegex($assertion);
@@ -706,8 +655,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function notAfter()
-    {
+    public function notAfter() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?!');
         $this->checkRegex($assertion);
@@ -720,8 +668,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function before()
-    {
+    public function before() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?<=');
         $this->checkRegex($assertion);
@@ -729,8 +676,7 @@ class Regex extends RegularExpression
         return $this;
     }
 
-    private function checkRegex(RegularExpression $regex)
-    {
+    private function checkRegex(RegularExpression $regex) {
         $errors = [];
         $errorHandler = set_error_handler(function($errno, $errstr) use (&$errors) {
             $errors[] = $errstr;
@@ -752,8 +698,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function notBefore()
-    {
+    public function notBefore() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?<!');
         $this->checkRegex($assertion);
@@ -767,8 +712,7 @@ class Regex extends RegularExpression
      * @param mixed $chars string or Charset 
      * @return Regex
      */
-    public function chars($chars)
-    {
+    public function chars($chars) {
         return $this->_chars(Charset::class, $chars);
     }
 
@@ -778,13 +722,11 @@ class Regex extends RegularExpression
      * @param mixed $chars Several (or array of) strings or CharacterClass.
      * @return Regex
      */
-    public function notChars($chars)
-    {
+    public function notChars($chars) {
         return $this->_chars(ComplementCharset::class, $chars);
     }
 
-    private function _chars($class, $chars)
-    {
+    private function _chars($class, $chars) {
         $charClass = new $class;
         if (is_string($chars)) {
             $charClass->chars($chars);
@@ -803,8 +745,7 @@ class Regex extends RegularExpression
      * @param type $code
      * @return Regex
      */
-    public function ansi($code)
-    {
+    public function ansi($code) {
         $this->expressions[] = new AnsiCharacter($code);
         return $this;
     }
@@ -815,8 +756,7 @@ class Regex extends RegularExpression
      * @param string $letter
      * @return Regex
      */
-    public function control($letter)
-    {
+    public function control($letter) {
         $this->expressions[] = new ControlCharacter($letter);
         return $this;
     }
@@ -827,8 +767,7 @@ class Regex extends RegularExpression
      * @param string $unicode Unicode property (use constants in Unicode class)
      * @return Regex
      */
-    public function unicode($unicode)
-    {
+    public function unicode($unicode) {
         $this->expressions[] = new UnicodeProperty($unicode);
         return $this;
     }
@@ -839,8 +778,7 @@ class Regex extends RegularExpression
      * @param string $unicode Unicode property (use constants in Unicode class)
      * @return Regex
      */
-    public function notUnicode($unicode)
-    {
+    public function notUnicode($unicode) {
         $this->expressions[] = new UnicodeProperty($unicode, true);
         return $this;
     }
@@ -851,8 +789,7 @@ class Regex extends RegularExpression
      * @param string $hex The code of the code point
      * @return Regex
      */
-    public function unicodeChar($code)
-    {
+    public function unicodeChar($code) {
         $this->expressions[] = new UnicodeCharacter($code);
         return $this;
     }
@@ -862,8 +799,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function extendedUnicode()
-    {
+    public function extendedUnicode() {
         $this->expressions[] .= '\\X';
         return $this;
     }
@@ -878,8 +814,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function cond()
-    {
+    public function cond() {
         $count = count($this->expressions);
         if ($this->expressions[$count - 2] instanceof Assertion) {
             $false = new Nothing();
@@ -903,8 +838,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function notCond($cond = null, $true = null, $false = null)
-    {
+    public function notCond($cond = null, $true = null, $false = null) {
         $count = count($this->expressions);
         if ($this->expressions[$count - 2] instanceof Assertion) {
             $false = new Nothing();
@@ -924,8 +858,7 @@ class Regex extends RegularExpression
      * @param int $number The number of the captured group.
      * @return Regex
      */
-    public function match($number)
-    {
+    public function match($number) {
         $this->expressions[] = new MatchAssertion($number);
         return $this;
     }
@@ -938,8 +871,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function greedy()
-    {
+    public function greedy() {
         return $this->quantifierPolicy(Quantifier::GREEDY, false);
     }
 
@@ -952,8 +884,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function greedyRecursive()
-    {
+    public function greedyRecursive() {
         return $this->quantifierPolicy(Quantifier::GREEDY, true);
     }
 
@@ -965,8 +896,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function lazy()
-    {
+    public function lazy() {
         return $this->quantifierPolicy(Quantifier::LAZY, false);
     }
 
@@ -979,8 +909,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function lazyRecursive()
-    {
+    public function lazyRecursive() {
         return $this->quantifierPolicy(Quantifier::LAZY, true);
     }
 
@@ -992,8 +921,7 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function possessive()
-    {
+    public function possessive() {
         return $this->quantifierPolicy(Quantifier::POSSESSIVE, false);
     }
 
@@ -1006,13 +934,11 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function possessiveRecursive()
-    {
+    public function possessiveRecursive() {
         return $this->quantifierPolicy(Quantifier::POSSESSIVE, true);
     }
 
-    private function quantifierPolicy($policy, $recursive)
-    {
+    private function quantifierPolicy($policy, $recursive) {
         if (empty($this->expressions)) {
             $this->defaultQuantifierPolicy = $policy;
         } else {
@@ -1025,8 +951,7 @@ class Regex extends RegularExpression
         return $this;
     }
 
-    protected function setQuantifierPolicy($policy, $recursive = false)
-    {
+    protected function setQuantifierPolicy($policy, $recursive = false) {
         foreach ($this->expressions as $expression) {
             $expression->setQuantifierPolicy($policy, $recursive);
         }
@@ -1037,12 +962,47 @@ class Regex extends RegularExpression
      * 
      * @return Regex
      */
-    public function start()
-    {
+    public function start() {
         if (!empty($this->expressions)) {
             $expression = end($this->expressions);
             $expression->mark++;
         }
+        return $this;
+    }
+
+    /**
+     * Match a non negative integer in the given range.
+     * 
+     * Allowed values for $leadingZeros are:
+     * - false: leading zeros are not allowed
+     * - true: leading zeros are required and must pad the integer to the same length as $max
+     * - null: leading zeros are allowed and must pad the integer to a length less than or equal to $max
+     * 
+     * @param int $min
+     * @param int $max
+     * @param bool $leadingZeros
+     * @return Regex
+     */
+    public function unsignedIntRange($min, $max, $leadingZeros = null) {
+        is_int($min) || RegexException::argInteger(1)->throw();
+        is_int($max) || RegexException::argInteger(2)->throw();
+        $min >= 0 || RegexException::argRange(1, 0, null)->throw();
+        $max >= $min || RegexException::argRange(2, $min, null)->throw();
+
+        if ($min < 10 && $max < 10) {
+            if ($min === $max) {
+                return $this->literal("$min");
+            } elseif ($min + 1 === $max) {
+                return $this->chars("$min$max");
+            } elseif ($min === 0 && $max === 9) {
+                return $this->digit();
+            } else {
+                return $this->chars("$min..$max");
+            }
+        }
+
+        $this->expressions[] = new UnsignedIntRange($min, $max, $leadingZeros);
+        
         return $this;
     }
 

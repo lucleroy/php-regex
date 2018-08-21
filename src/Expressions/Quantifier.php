@@ -47,7 +47,6 @@ class Quantifier extends RegularExpression implements Atomic
         }
         if ($this->expression instanceof Regex) {
             $exp = $this->expression->getExpressions();
-            var_dump(count($exp));
             if (count($exp) == 1) {
                 $expression = $exp[0];
             }

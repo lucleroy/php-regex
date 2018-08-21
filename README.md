@@ -102,7 +102,7 @@ The choosen character is automatically escaped:
 $regex = Regex::create()
     ->digit()->atLeastOne()->literal('%/')->digit()->atLeastOne()->literal('%');
 
-echo $regex->getRegex();   // /\d+%\/\d+%/m
+echo $regex->getRegex();    // /\d+%\/\d+%/m
 echo $regex->getRegex('%'); // %\d+\%/\d+\%%m
 ``` 
 
@@ -680,3 +680,18 @@ echo Regex::create()
 echo Regex::create()
     ->crlf();   // \r\n
 ```
+
+`Regex:unsignedIntRange` matches a nonnegative integer in a given range. The third parameters specify how leading zeros are handled:
+
+```php
+echo Regex::create()
+    ->unsignedIntRange(1, 12);       // 1[0-2]|0?[1-9]   leadings zeros are optional
+
+echo Regex::create()
+    ->unsignedIntRange(1, 12, true); // 1[0-2]|0[1-9]    leadings zeros are required
+    
+echo Regex::create()
+    ->unsignedIntRange(1, 12, false); // 1[0-2]|[1-9]    leadings zeros are not accepted
+```
+
+Note that in any case, the number of digits cannot exceed the number of digits of the maximum value.
