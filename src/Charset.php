@@ -267,6 +267,18 @@ class Charset extends RegularExpression implements Atomic
         $this->chars .= sprintf('\\x%02X', $code);
         return $this;
     }
+    
+    /**
+     * 
+     * @param type $start
+     * @param type $end
+     * @return Charset
+     */
+    public function ansiRange($start, $end)
+    {
+        $this->chars .= sprintf('\\x%02X-\\x%02X', $start, $end);
+        return $this;
+    }
 
     /**
      * Add unicode characters with a given unicode property.

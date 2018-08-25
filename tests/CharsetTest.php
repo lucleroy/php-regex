@@ -20,6 +20,11 @@ class CharsetTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals('[\x1B]', Charset::create()->ansi(0x1b));
     }
+    
+    public function testAnsiRange()
+    {
+        $this->assertEquals('[\x1B-\x7F]', Charset::create()->ansiRange(0x1b, 0x7f));
+    }
 
     public function testUnicodeChar()
     {

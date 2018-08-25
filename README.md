@@ -49,7 +49,7 @@ PHP 5.5 or more.
 Add the following to the `require` section of your composer.json file
 
 ```
-"lucleroy/php-regex": "dev-master"
+"lucleroy/php-regex": "*"
 ```
 and run `composer update`.
 
@@ -203,6 +203,13 @@ You can match an ANSI character with `Charset::ansi`:
 ```php
 echo Regex::create()
     ->chars(Charset::create()->ansi(0x7f)); // [\x7F]
+```
+
+You can match a range of ANSI characters with `Charset::ansiRange`:
+
+```php
+echo Regex::create()
+    ->chars(Charset::create()->ansiRange(0x20, 0x7f)); // [\x20-\x7F]
 ```
 
 Finally, `Charset` provides some methods to work with Unicode characters.
