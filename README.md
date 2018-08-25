@@ -22,6 +22,7 @@ PHP library with fluent interface to build regular expressions.
     * [Atomic grouping](#atomic)
     * [Lookahead, Lookbehind](#lookaround)
     * [Conditionals](#cond)
+    * [Recursion](#recursion)
     * [Case sensitivity](#case)
     * [Special Expressions](#special)
 
@@ -670,6 +671,20 @@ echo Regex::create()
     ->literal('a')
     ->literal('b')
     ->literal('c');   // (?i)abc(?-i)
+```
+
+### <a name="recursion"></a> Recursion
+
+Use `Regex::matchRecursive` to match recursively the whole pattern. This example matches balanced parentheses:
+
+```php
+echo Regex::create()
+    ->literal('(')
+    ->start()
+        ->notChars('()')->atLeastOne()->atomic()
+        ->matchRecursive()->anyTimes()
+    ->alt()
+    ->literal(')');   // \((?:(?>[^\(\)]+)|(?:?R)*)\)
 ```
 
 ### <a name="special"></a> Special Expressions

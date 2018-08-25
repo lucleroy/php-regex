@@ -15,6 +15,7 @@ use LucLeroy\Regex\Expressions\Conditional;
 use LucLeroy\Regex\Expressions\ControlCharacter;
 use LucLeroy\Regex\Expressions\Literal;
 use LucLeroy\Regex\Expressions\MatchAssertion;
+use LucLeroy\Regex\Expressions\MatchRecursive;
 use LucLeroy\Regex\Expressions\Nothing;
 use LucLeroy\Regex\Expressions\Quantifier;
 use LucLeroy\Regex\Expressions\RegularExpression;
@@ -1003,6 +1004,12 @@ class Regex extends RegularExpression {
 
         $this->expressions[] = new UnsignedIntRange($min, $max, $leadingZeros);
         
+        return $this;
+    }
+    
+    public function matchRecursive()
+    {
+        $this->expressions[] = new MatchRecursive();
         return $this;
     }
 

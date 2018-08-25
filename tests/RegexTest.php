@@ -356,4 +356,16 @@ class RegexTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('25[0-5]|2[0-4]\d|1\d\d|0?[1-9]\d|0{0,2}\d', Regex::create()->unsignedIntRange(0, 255)->toString());
         $this->assertEquals('2[0-4]|1\d|[1-9]', Regex::create()->unsignedIntRange(1, 24, false)->toString());
     }
+    
+    public function testMatchRecursive()
+    {
+        $regex = Regex::create()
+            ->literal('(')
+            ->start()
+                ->notChars('()')->atLeastOne()->atomic()
+                ->matchRecursive()->anyTimes()
+            ->alt()
+            ->literal(')');
+        $this->assertEquals('\((?:(?>[^\(\)]+)|(?:?R)*)\)', $regex->toString());
+    }
 }
