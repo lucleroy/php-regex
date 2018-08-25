@@ -6,7 +6,6 @@ PHP library with fluent interface to build regular expressions.
 
 * [Introduction](#introduction)
 * [Requirements](#require)
-* [Limitations](#limitations)
 * [Installation](#install)
 * [Usage](#usage)
     * [Workflow](#workflow)
