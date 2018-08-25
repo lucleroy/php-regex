@@ -45,11 +45,6 @@ $regex = '/0[xX][0-9a-fA-F]+/m';
 
 PHP 5.5 or more.
 
-## <a name="limitations"></a> Limitations
-
-All the supported PHP PCRE features are listed in this document. Some features
-are missing. In particular, the recursion is not supported.
-
 ## <a name="install"></a> Installation (with Composer)
 
 Add the following to the `require` section of your composer.json file

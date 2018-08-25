@@ -1007,6 +1007,11 @@ class Regex extends RegularExpression {
         return $this;
     }
     
+    /**
+     * Match the whole pattern recursively.
+     * 
+     * @return Regex
+     */
     public function matchRecursive()
     {
         $this->expressions[] = new MatchRecursive();
