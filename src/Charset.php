@@ -259,7 +259,7 @@ class Charset extends RegularExpression implements Atomic
     /**
      * Add a character with a given ansi code.
      * 
-     * @param int $code
+     * @param int $code The code of char
      * @return Charset
      */
     public function ansi($code)
@@ -270,8 +270,8 @@ class Charset extends RegularExpression implements Atomic
     
     /**
      * 
-     * @param type $start
-     * @param type $end
+     * @param int $start The code of the first char
+     * @param int $end The code of the last char
      * @return Charset
      */
     public function ansiRange($start, $end)
@@ -307,7 +307,7 @@ class Charset extends RegularExpression implements Atomic
     /**
      * Add a specific Unicode code point.
      * 
-     * @param int $code
+     * @param int $code The code of the code point
      * @return Charset
      */
     public function unicodeChar($code)

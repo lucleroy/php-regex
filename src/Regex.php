@@ -743,11 +743,23 @@ class Regex extends RegularExpression {
     /**
      * Match a character with a given ansi code.
      * 
-     * @param type $code
+     * @param int $code The code of char
      * @return Regex
      */
     public function ansi($code) {
         $this->expressions[] = new AnsiCharacter($code);
+        return $this;
+    }
+    
+    /**
+     * 
+     * @param int $start The code of the first char
+     * @param int $end The code of the last char
+     * @return Regex
+     */
+    public function ansiRange($start, $end)
+    {
+        $this->expressions[] = Charset::create()->ansiRange($start, $end);
         return $this;
     }
 
@@ -792,6 +804,19 @@ class Regex extends RegularExpression {
      */
     public function unicodeChar($code) {
         $this->expressions[] = new UnicodeCharacter($code);
+        return $this;
+    }
+    
+    /**
+     * Add an interval of unicode characters.
+     * 
+     * @param int $start The code of the first code point
+     * @param int $end The code of the last code point
+     * @return Regex
+     */
+    public function unicodeCharRange($start, $end)
+    {
+        $this->expressions[] = Charset::create()->unicodeCharRange($start, $end);
         return $this;
     }
 
