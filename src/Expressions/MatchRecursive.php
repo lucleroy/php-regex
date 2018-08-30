@@ -7,7 +7,7 @@ class MatchRecursive extends RegularExpression
     
     protected function toString()
     {
-        return '?R';
+        return '(?R)';
     }
 
 }
