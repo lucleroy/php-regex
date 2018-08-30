@@ -366,6 +366,6 @@ class RegexTest extends \PHPUnit\Framework\TestCase
                 ->matchRecursive()->anyTimes()
             ->alt()
             ->literal(')');
-        $this->assertEquals('\((?:(?>[^\(\)]+)|(?:?R)*)\)', $regex->toString());
+        $this->assertEquals('\((?:(?>[^\(\)]+)|(?:(?R))*)\)', $regex->toString());
     }
 }

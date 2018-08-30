@@ -685,7 +685,7 @@ echo Regex::create()
         ->notChars('()')->atLeastOne()->atomic()
         ->matchRecursive()->anyTimes()
     ->alt()
-    ->literal(')');   // \((?:(?>[^\(\)]+)|(?:?R)*)\)
+    ->literal(')');   // \((?:(?>[^\(\)]+)|(?:(?R))*)\)
 ```
 
 ### <a name="special"></a> Special Expressions
