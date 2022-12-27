@@ -282,20 +282,34 @@ class RegexTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals('(?<=a)', Regex::create()->literal('a')->before());
     }
+
+    public function testBeforeCaptureError()
+    {
+        $this->expectException(RegexException::class);
+        $this->assertEquals('(?P<capture>a)b(?<=(?P=capture))', Regex::create()->literal('a')->capture('capture')->literal('b')->ref('capture')->before());
+    }
     
     public function testNotBefore()
     {
         $this->assertEquals('(?<!a)', Regex::create()->literal('a')->notBefore());
     }
+
+    public function testNotBeforeCaptureError()
+    {
+        $this->expectException(RegexException::class);
+        $this->assertEquals('(?P<capture>a)b(?<(?P=capture))', Regex::create()->literal('a')->capture('capture')->literal('b')->ref('capture')->notBefore());
+    }
     
     public function testAfter()
     {
         $this->assertEquals('(?=a)', Regex::create()->literal('a')->after());
+        $this->assertEquals('(?P<capture>a)b(?=(?P=capture))', Regex::create()->literal('a')->capture('capture')->literal('b')->ref('capture')->after());
     }
     
     public function testNotAfter()
     {
         $this->assertEquals('(?!a)', Regex::create()->literal('a')->notAfter());
+        $this->assertEquals('(?P<capture>a)b(?!(?P=capture))', Regex::create()->literal('a')->capture('capture')->literal('b')->ref('capture')->notAfter());
     }
     
     public function testMatch()

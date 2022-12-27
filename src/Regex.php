@@ -646,7 +646,6 @@ class Regex extends RegularExpression {
     public function after() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?=');
-        $this->checkRegex($assertion);
         $this->expressions[] = $assertion;
         return $this;
     }
@@ -659,7 +658,6 @@ class Regex extends RegularExpression {
     public function notAfter() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?!');
-        $this->checkRegex($assertion);
         $this->expressions[] = $assertion;
         return $this;
     }
@@ -672,26 +670,11 @@ class Regex extends RegularExpression {
     public function before() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?<=');
-        $this->checkRegex($assertion);
+        if (!$this->isRegexValid($assertion)) {
+            throw RegexException::assertionNotValid();
+        }
         $this->expressions[] = $assertion;
         return $this;
-    }
-
-    private function checkRegex(RegularExpression $regex) {
-        $errors = [];
-        $errorHandler = set_error_handler(function($errno, $errstr) use (&$errors) {
-            $errors[] = $errstr;
-        }, E_WARNING);
-        if (!$regex instanceof Regex) {
-            $regex = (new Regex([$regex]));
-        }
-        $code = @preg_match($regex->getRegex(), '');
-        set_error_handler($errorHandler);
-        if ($errors) {
-            $msg = 'Regex ' . $regex . ': ' . trim(end(explode(':', $errors[0], 3)));
-            throw new Exception($msg);
-        }
-        return $errors;
     }
 
     /**
@@ -702,9 +685,24 @@ class Regex extends RegularExpression {
     public function notBefore() {
         !empty($this->expressions) || RegexException::notEnoughExpressions(1)->throw();
         $assertion = new Assertion(array_pop($this->expressions), '?<!');
-        $this->checkRegex($assertion);
+        if (!$this->isRegexValid($assertion)) {
+            throw RegexException::assertionNotValid();
+        }
         $this->expressions[] = $assertion;
         return $this;
+    }
+
+    private function isRegexValid(RegularExpression $regex) {
+        $errors = [];
+        $errorHandler = set_error_handler(function($errno, $errstr) use (&$errors) {
+            $errors[] = $errstr;
+        }, E_WARNING);
+        if (!$regex instanceof Regex) {
+            $regex = (new Regex([$regex]));
+        }
+        @preg_match($regex->getRegex(), '');
+        set_error_handler($errorHandler);
+        return !$errors;
     }
 
     /**

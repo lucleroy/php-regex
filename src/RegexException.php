@@ -24,4 +24,10 @@ class RegexException extends GenericException
         $msg = "The last expression must be a quantifier.";
         return new self($msg);
     }
+
+    public static function assertionNotValid()
+    {
+        $msg = "The assertion is not valid.";
+        return new self($msg);
+    }
 }
